@@ -1,6 +1,8 @@
 package com.example.multithreadingtest;
 
+import com.example.multithreadingtest.repository.IUserRepository;
 import java.util.concurrent.Future;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AsyncService {
+  @Autowired
+  private IUserRepository userRepository;
 
   @Async
   public Future<String> getMessageAsync(int num, int time) throws InterruptedException {
@@ -23,27 +27,27 @@ public class AsyncService {
 
 
   @Async
-  public Future<String> method1(String str) throws InterruptedException {
+  public Future<String> method1(String str) {
     long startTime = System.currentTimeMillis();
-    Thread.sleep(1000 * 10);
+    userRepository.findByEmail("email");
     long spendTime = System.currentTimeMillis() - startTime;
     return new AsyncResult<>(
         Thread.currentThread().getName() + ", value: " + str + ", time spent: " + spendTime);
   }
 
   @Async
-  public Future<String> method2(String str) throws InterruptedException {
+  public Future<String> method2(String str) {
     long startTime = System.currentTimeMillis();
-    Thread.sleep(1000 * 5);
+    userRepository.findByEmail("email");
     long spendTime = System.currentTimeMillis() - startTime;
     return new AsyncResult<>(
         Thread.currentThread().getName() + ", value: " + str + ", time spent: " + spendTime);
   }
 
   @Async
-  public Future<String> method3(String str) throws InterruptedException {
+  public Future<String> method3(String str) {
     long startTime = System.currentTimeMillis();
-    Thread.sleep(1000 * 15);
+    userRepository.findByEmail("email");
     long spendTime = System.currentTimeMillis() - startTime;
     return new AsyncResult<>(
         Thread.currentThread().getName() + ", value: " + str + ", time spent: " + spendTime);

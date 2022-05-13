@@ -36,6 +36,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
       + "FROM user_tb utb WHERE email = :email ", nativeQuery = true)
   @Async
   CompletableFuture<List<User>> findByEmailNativeAsync(String email);
+
 }
 
 
