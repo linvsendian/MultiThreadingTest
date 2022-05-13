@@ -20,4 +20,32 @@ public class AsyncService {
     Thread.sleep(time);
     return new AsyncResult<>("hello : " + num + " - " + Thread.currentThread().getName());
   }
+
+
+  @Async
+  public Future<String> method1(String str) throws InterruptedException {
+    long startTime = System.currentTimeMillis();
+    Thread.sleep(1000 * 10);
+    long spendTime = System.currentTimeMillis() - startTime;
+    return new AsyncResult<>(
+        Thread.currentThread().getName() + ", value: " + str + ", time spent: " + spendTime);
+  }
+
+  @Async
+  public Future<String> method2(String str) throws InterruptedException {
+    long startTime = System.currentTimeMillis();
+    Thread.sleep(1000 * 5);
+    long spendTime = System.currentTimeMillis() - startTime;
+    return new AsyncResult<>(
+        Thread.currentThread().getName() + ", value: " + str + ", time spent: " + spendTime);
+  }
+
+  @Async
+  public Future<String> method3(String str) throws InterruptedException {
+    long startTime = System.currentTimeMillis();
+    Thread.sleep(1000 * 15);
+    long spendTime = System.currentTimeMillis() - startTime;
+    return new AsyncResult<>(
+        Thread.currentThread().getName() + ", value: " + str + ", time spent: " + spendTime);
+  }
 }

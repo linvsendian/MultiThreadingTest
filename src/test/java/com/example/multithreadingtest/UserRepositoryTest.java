@@ -5,9 +5,13 @@ import com.example.multithreadingtest.model.User;
 import com.example.multithreadingtest.repository.IUserRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +34,7 @@ public class UserRepositoryTest {
 
   @BeforeEach
   void save_users() {
-    int maxSize = 40000;
+    int maxSize = 100000;
     IntStream.rangeClosed(1, maxSize).forEach(
         x -> {
           User tempUser = User.builder().id(x).name("user_" + x).email("email").build();
@@ -39,47 +43,80 @@ public class UserRepositoryTest {
     );
   }
 
+
   @Test
-  void no_native_query_async_test()
-      throws ExecutionException, InterruptedException {
+  void sequence_query_test() {
     // Arrange
     long currentTimeMillis = System.currentTimeMillis();
     int parallelism = 7;
-    List<Future<List<User>>> futureList = new ArrayList<>();
     List<User> responseList = new ArrayList<>();
 
     // Act
     IntStream.rangeClosed(1, parallelism).forEach(
-        x -> futureList.add(userRepository.findByEmailAsync("email"))
+        x -> {
+          long startTime = System.currentTimeMillis();
+          responseList.addAll(userRepository.findByEmail("email"));
+          System.out.println(
+              Thread.currentThread().getName()
+                  + ", Index: " + x
+                  + "  ,spent time: " + (System.currentTimeMillis() - startTime) + " ms");
+        }
     );
 
-    for (Future<List<User>> future : futureList) {
-      List<User> tempResponse = future.get();
-      responseList.addAll(tempResponse);
-    }
-
-    // Assert
     System.out.println("response size: " + responseList.size());
     System.out.println(
         "total spent time: " + (System.currentTimeMillis() - currentTimeMillis) + " ms");
   }
 
-
   @Test
-  void native_query_async_test() throws ExecutionException, InterruptedException {
-
+  void non_native_query_async_test()
+      throws ExecutionException, InterruptedException {
+    // Arrange
     long currentTimeMillis = System.currentTimeMillis();
     int parallelism = 7;
 
-    List<User> result = new ArrayList<>();
-    for (int i = 0; i < parallelism; i++) {
-      result.addAll(userRepository.findByEmailNativeAsync("email").get());
-    }
+    // Act
+    List<CompletableFuture<List<User>>> futureList = IntStream.rangeClosed(1, parallelism)
+        .mapToObj(x -> userRepository.findAllByEmail("email"))
+        .collect(Collectors.toList());
 
-    System.out.println("response size: " + result.size());
+    //list to array conversion
+    CompletableFuture<Void> resultantCf = CompletableFuture.allOf(
+        futureList.toArray(new CompletableFuture[0]));
+
+    //join all async processes
+    CompletableFuture<List<List<User>>> allFutureResults = resultantCf
+        .thenApply(t -> futureList.stream().map(CompletableFuture::join).collect(
+            Collectors.toList()));
+
+    System.out.println("Result - " + allFutureResults.get().size());
     System.out.println(
         "total spent time: " + (System.currentTimeMillis() - currentTimeMillis) + " ms");
   }
 
+  @Test
+  void native_query_async_test()
+      throws ExecutionException, InterruptedException {
+    // Arrange
+    long currentTimeMillis = System.currentTimeMillis();
+    int parallelism = 7;
 
+    // Act
+    List<CompletableFuture<List<User>>> futureList = IntStream.rangeClosed(1, parallelism)
+        .mapToObj(x -> userRepository.findByEmailNativeAsync("email"))
+        .collect(Collectors.toList());
+
+    //list to array conversion
+    CompletableFuture<Void> resultantCf = CompletableFuture.allOf(
+        futureList.toArray(new CompletableFuture[0]));
+
+    //join all async processes
+    CompletableFuture<List<List<User>>> allFutureResults = resultantCf
+        .thenApply(t -> futureList.stream().map(CompletableFuture::join).collect(
+            Collectors.toList()));
+
+    System.out.println("Result - " + allFutureResults.get().size());
+    System.out.println(
+        "total spent time: " + (System.currentTimeMillis() - currentTimeMillis) + " ms");
+  }
 }
