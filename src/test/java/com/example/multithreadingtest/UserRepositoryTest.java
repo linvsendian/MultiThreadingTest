@@ -48,11 +48,11 @@ public class UserRepositoryTest {
   void sequence_query_test() {
     // Arrange
     long currentTimeMillis = System.currentTimeMillis();
-    int parallelism = 7;
+    int range = 3;
     List<User> responseList = new ArrayList<>();
 
     // Act
-    IntStream.rangeClosed(1, parallelism).forEach(
+    IntStream.rangeClosed(1, range).forEach(
         x -> {
           long startTime = System.currentTimeMillis();
           responseList.addAll(userRepository.findByEmail("email"));
@@ -73,7 +73,7 @@ public class UserRepositoryTest {
       throws ExecutionException, InterruptedException {
     // Arrange
     long currentTimeMillis = System.currentTimeMillis();
-    int parallelism = 7;
+    int parallelism = 3;
 
     // Act
     List<CompletableFuture<List<User>>> futureList = IntStream.rangeClosed(1, parallelism)

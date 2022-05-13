@@ -1,12 +1,16 @@
 package com.example.multithreadingtest;
 
+import com.example.multithreadingtest.service.AsyncService;
+import com.example.multithreadingtest.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.annotation.Async;
 
 /**
  * AsyncServiceTest.
@@ -21,6 +25,13 @@ public class AsyncServiceTest {
   @Autowired
   private AsyncService asyncService;
 
+  @Autowired
+  private UserService userService;
+
+  @BeforeEach
+  void save_users() {
+    userService.saveUsers();
+  }
 
   @Test
   void async_test() throws InterruptedException, ExecutionException {
@@ -43,7 +54,7 @@ public class AsyncServiceTest {
 
 
   /**
-   * Worked.
+   * false.
    */
   @Test
   void async_loop_testing() throws InterruptedException, ExecutionException {
@@ -51,8 +62,8 @@ public class AsyncServiceTest {
     List<Future<String>> futureList = new ArrayList<>();
     List<String> finalResult = new ArrayList<>();
 
-    for (int x = 1; x <= 7; x++) {
-      Future<String> temp = asyncService.method1("" + 1);
+    for (int x = 1; x <= 1; x++) {
+      Future<String> temp = asyncService.method1("" + x);
       futureList.add(temp);
     }
 
@@ -60,12 +71,10 @@ public class AsyncServiceTest {
       finalResult.add(future.get());
     }
 
-    System.out.println(finalResult);
+    finalResult.forEach(System.out::println);
     System.out.println(
         "total time spent: " + (System.currentTimeMillis() - startTime) + " ms");
   }
-
-
 
 
 }
