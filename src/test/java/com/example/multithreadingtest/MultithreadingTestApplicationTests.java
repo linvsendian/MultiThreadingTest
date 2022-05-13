@@ -2,8 +2,10 @@ package com.example.multithreadingtest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +19,7 @@ class MultithreadingTestApplicationTests {
   @Test
   void asyncTest() throws InterruptedException, ExecutionException {
     long currentTimeMillis = System.currentTimeMillis();
-    Future<String> future = asyncService.getMessageAsync(1, 20);
+    Future<String> future = asyncService.getMessageAsync(7, 20);
 
     String response = future.get();
     System.out.println("spend time: " + (System.currentTimeMillis() - currentTimeMillis));
@@ -41,4 +43,17 @@ class MultithreadingTestApplicationTests {
     System.out.println("spend time: " + (System.currentTimeMillis() - currentTimeMillis));
     responseList.forEach(System.out::println);
   }
+
+  @Test
+  void serie_async_testing() throws ExecutionException, InterruptedException {
+    CompletableFuture<String> finalResult =  CompletableFuture.supplyAsync(() -> {
+      return "Some Result";
+    }).thenApplyAsync(result -> {
+      // Executed in a different thread from ForkJoinPool.commonPool()
+      return "Processed Result";
+    });
+
+    System.out.println(finalResult.get());
+  }
+
 }
