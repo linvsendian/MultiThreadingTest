@@ -64,27 +64,19 @@ public class UserRepositoryTest {
         "total spent time: " + (System.currentTimeMillis() - currentTimeMillis) + " ms");
   }
 
+
   @Test
-  void native_query_based_interface_projection_multiThreading_test()
-      throws ExecutionException, InterruptedException {
-    // Arrange
+  void native_query_async_test() throws ExecutionException, InterruptedException {
+
     long currentTimeMillis = System.currentTimeMillis();
     int parallelism = 7;
-    List<Future<List<IUserProjection>>> futureList = new ArrayList<>();
-    List<IUserProjection> responseList = new ArrayList<>();
 
-    // Act
-    IntStream.rangeClosed(1, parallelism).forEach(
-        x -> futureList.add(userRepository.findByEmailNativeAsync("email"))
-    );
-
-    for (Future<List<IUserProjection>> future : futureList) {
-      List<IUserProjection> tempResponse = future.get();
-      responseList.addAll(tempResponse);
+    List<User> result = new ArrayList<>();
+    for (int i = 0; i < parallelism; i++) {
+      result.addAll(userRepository.findByEmailNativeAsync("email").get());
     }
 
-    // Assert
-    System.out.println("response size: " + responseList.size());
+    System.out.println("response size: " + result.size());
     System.out.println(
         "total spent time: " + (System.currentTimeMillis() - currentTimeMillis) + " ms");
   }

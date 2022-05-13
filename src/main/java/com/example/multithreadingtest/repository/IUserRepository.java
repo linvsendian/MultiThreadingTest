@@ -3,6 +3,7 @@ package com.example.multithreadingtest.repository;
 import com.example.multithreadingtest.model.IUserProjection;
 import com.example.multithreadingtest.model.User;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -36,14 +37,20 @@ public interface IUserRepository extends JpaRepository<User, Long> {
       + "FROM user_tb utb WHERE email = :email ", nativeQuery = true)
   List<IUserProjection> findByEmailNative(String email);
 
+  @Query(value = ""
+      + "SELECT utb.id, utb.name, utb.email "
+      + "FROM user_tb utb WHERE email = :email ", nativeQuery = true)
   @Async
-  default Future<List<IUserProjection>> findByEmailNativeAsync(String email) {
-    System.out.println("process-" + Thread.currentThread().getName() + " sent");
-    long currentTimeMillis = System.currentTimeMillis();
-    Future<List<IUserProjection>> response = new AsyncResult<>(findByEmailNative(email));
-    System.out.println(
-        "process-" + Thread.currentThread().getName() + " spent: " + (System.currentTimeMillis()
-            - currentTimeMillis) + "ms");
-    return response;
-  }
+  CompletableFuture<List<User>> findByEmailNativeAsync(String email);
+
+//  @Async
+//  default Future<List<IUserProjection>> findByEmailNativeAsync(String email) {
+//    System.out.println("process-" + Thread.currentThread().getName() + " sent");
+//    long currentTimeMillis = System.currentTimeMillis();
+//    Future<List<IUserProjection>> response = new AsyncResult<>(findByEmailNative(email));
+//    System.out.println(
+//        "process-" + Thread.currentThread().getName() + " spent: " + (System.currentTimeMillis()
+//            - currentTimeMillis) + "ms");
+//    return response;
+//  }
 }
