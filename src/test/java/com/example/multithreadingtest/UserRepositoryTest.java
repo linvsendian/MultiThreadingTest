@@ -1,22 +1,17 @@
 package com.example.multithreadingtest;
 
-import com.example.multithreadingtest.model.IUserProjection;
 import com.example.multithreadingtest.model.User;
 import com.example.multithreadingtest.repository.IUserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.CollectionUtils;
 
 /**
  * userRepositoryTest.
