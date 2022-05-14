@@ -1,35 +1,39 @@
 package com.example.multithreadingtest.model;
 
-import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * user.
+ * User.
  *
  * @Description TODO
- * @Date 11/01/2022 20:14
+ * @Date 14/05/2022 0:58
  * @Created by Qinxiu Wang
  */
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Table(name = "user_tb")
-public class User implements Serializable {
-
-  private static final long serialVersionUID = -2582224494389745630L;
-
-  @Id
-  private long id;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User {
 
   private String name;
+  private String blog;
 
-  private String email;
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getBlog() {
+    return blog;
+  }
+
+  public void setBlog(String blog) {
+    this.blog = blog;
+  }
+
+  @Override
+  public String toString() {
+    return "User [name=" + name + ", blog=" + blog + "]";
+  }
+
 }
