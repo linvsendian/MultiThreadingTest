@@ -16,7 +16,7 @@ public class UserServicePerformance extends Thread {
         long startTime = System.nanoTime();
         userService.getUserByEmail("email");
         long spendTime = System.nanoTime() - startTime;
-        String result = Thread.currentThread().getName() + ", time spent: " + spendTime;
+        String result = "Class: " + userService.getClass().getName() + " " + Thread.currentThread().getName() + ", time spent:" + spendTime;
         System.out.println(result);
         return new AsyncResult<>(result);
     }
