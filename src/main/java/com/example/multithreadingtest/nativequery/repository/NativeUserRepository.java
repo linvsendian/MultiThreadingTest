@@ -14,7 +14,6 @@ public interface NativeUserRepository extends JpaRepository<User, Long> {
     @Query(value = ""
             + "SELECT utb.id, utb.name, utb.email "
             + "FROM user_tb utb WHERE email = :email ", nativeQuery = true)
-    @Async
     CompletableFuture<List<User>> findByEmail(String email);
 
 }

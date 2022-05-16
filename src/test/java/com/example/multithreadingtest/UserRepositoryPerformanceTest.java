@@ -53,7 +53,7 @@ class UserRepositoryPerformanceTest {
         int total = 7;
         IntStream.rangeClosed(1, total).forEach(
                 x -> {
-                    Future<String> jpaPerformance = jpaUserServicePerformance.showPerformance("" + x);
+                    Future<String> jpaPerformance = jpaUserServicePerformance.showPerformance();
                     try {
                         System.out.println("JPA performance: " + jpaPerformance.get());
                     } catch (InterruptedException | ExecutionException e) {
@@ -63,7 +63,7 @@ class UserRepositoryPerformanceTest {
         );
         IntStream.rangeClosed(1, total).forEach(
                 x -> {
-                    Future<String> nativePerformance = nativeUserServicePerformance.showPerformance("" + x);
+                    Future<String> nativePerformance = nativeUserServicePerformance.showPerformance();
                     try {
                         System.out.println("Native performance" + nativePerformance.get());
                     } catch (InterruptedException | ExecutionException e) {

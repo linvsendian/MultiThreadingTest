@@ -9,7 +9,6 @@ import java.util.concurrent.CompletableFuture;
 
 public interface JpaUserRepository extends JpaRepository<User, Long> {
 
-    @Async
     CompletableFuture<List<User>> findByEmail(String email);
 }
 
