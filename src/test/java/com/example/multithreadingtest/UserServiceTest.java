@@ -29,7 +29,7 @@ class UserServiceTest {
             UserServicePerformance jpaUserServicePerformance = new UserServicePerformance(jpaUserService);
             threadList.add(new Thread(jpaUserServicePerformance));
         }
-        threadList.forEach(Thread::run);
+        threadList.forEach(Thread::start);
         threadList.forEach(x -> {
             try {
                 x.join();
@@ -37,7 +37,7 @@ class UserServiceTest {
                 e.printStackTrace();
             }
         });
-        System.out.println("JPA total time spent: " + (System.nanoTime() - startTime) + " ms");
+        System.out.println("SINGLE JPA total time spent: " + (System.nanoTime() - startTime) + " ms");
 
 
         threadList = new ArrayList<>();
@@ -46,7 +46,7 @@ class UserServiceTest {
             UserServicePerformance jpaUserServicePerformance = new UserServicePerformance(jpaUserService);
             threadList.add(new Thread(jpaUserServicePerformance));
         }
-        threadList.forEach(Thread::run);
+        threadList.forEach(Thread::start);
         threadList.forEach(x -> {
             try {
                 x.join();
@@ -54,7 +54,7 @@ class UserServiceTest {
                 e.printStackTrace();
             }
         });
-        System.out.println("JPA total time spent: " + (System.nanoTime() - startTime) + " ms");
+        System.out.println("MULTI JPA total time spent: " + (System.nanoTime() - startTime) + " ms");
 
         // Native
         threadList = new ArrayList<>();
@@ -63,7 +63,7 @@ class UserServiceTest {
             UserServicePerformance nativeUserServicePerformance = new UserServicePerformance(nativeUserService);
             threadList.add(new Thread(nativeUserServicePerformance));
         }
-        threadList.forEach(Thread::run);
+        threadList.forEach(Thread::start);
         threadList.forEach(x -> {
             try {
                 x.join();
@@ -71,7 +71,7 @@ class UserServiceTest {
                 e.printStackTrace();
             }
         });
-        System.out.println("Native total time spent: " + (System.nanoTime() - startTime) + " ms");
+        System.out.println("SINGLE Native total time spent: " + (System.nanoTime() - startTime) + " ms");
 
 
         threadList = new ArrayList<>();
@@ -80,7 +80,7 @@ class UserServiceTest {
             UserServicePerformance jpaUserServicePerformance = new UserServicePerformance(nativeUserService);
             threadList.add(new Thread(jpaUserServicePerformance));
         }
-        threadList.forEach(Thread::run);
+        threadList.forEach(Thread::start);
         threadList.forEach(x -> {
             try {
                 x.join();
@@ -88,6 +88,6 @@ class UserServiceTest {
                 e.printStackTrace();
             }
         });
-        System.out.println("Native total time spent: " + (System.nanoTime() - startTime) + " ms");
+        System.out.println("MULTI Native total time spent: " + (System.nanoTime() - startTime) + " ms");
     }
 }

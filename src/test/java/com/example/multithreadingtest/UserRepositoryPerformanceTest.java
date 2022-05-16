@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -29,14 +29,9 @@ class UserRepositoryPerformanceTest {
     @Autowired
     private NativeUserService nativeUserService;
 
-    private UserServicePerformance jpaUserServicePerformance;
-
-    private UserServicePerformance nativeUserServicePerformance;
 
     @BeforeEach
     public void saveUsers() {
-        jpaUserServicePerformance = new UserServicePerformance(jpaUserService);
-        nativeUserServicePerformance = new UserServicePerformance(nativeUserService);
         int maxSize = 100000;
         IntStream.rangeClosed(1, maxSize).forEach(
                 x -> {
@@ -51,25 +46,36 @@ class UserRepositoryPerformanceTest {
     @Test
     void testPerformance() {
         int total = 7;
+        List<Thread> threadList = new ArrayList<>();
         IntStream.rangeClosed(1, total).forEach(
                 x -> {
-                    Future<String> jpaPerformance = jpaUserServicePerformance.showPerformance();
-                    try {
-                        System.out.println("JPA performance: " + jpaPerformance.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
+                    UserServicePerformance jpaUserServicePerformance = new UserServicePerformance(jpaUserService);
+                    threadList.add(new Thread(jpaUserServicePerformance));
                 }
         );
+        threadList.forEach(Thread::start);
+        threadList.forEach(x -> {
+            try {
+                x.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        List<Thread> threadList2 = new ArrayList<>();
         IntStream.rangeClosed(1, total).forEach(
                 x -> {
-                    Future<String> nativePerformance = nativeUserServicePerformance.showPerformance();
-                    try {
-                        System.out.println("Native performance" + nativePerformance.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
+                    UserServicePerformance nativeUserServicePerformance = new UserServicePerformance(nativeUserService);
+                    threadList2.add(new Thread(nativeUserServicePerformance));
                 }
         );
+        threadList2.forEach(Thread::start);
+        threadList2.forEach(x -> {
+            try {
+                x.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

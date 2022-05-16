@@ -12,11 +12,13 @@ public class UserServicePerformance extends Thread {
         this.userService = userService;
     }
 
-    public Future<String> showPerformance() {
+    private Future<String> showPerformance() {
         long startTime = System.nanoTime();
         userService.getUserByEmail("email");
         long spendTime = System.nanoTime() - startTime;
-        return new AsyncResult<>(Thread.currentThread().getName() + ", time spent: " + spendTime);
+        String result = Thread.currentThread().getName() + ", time spent: " + spendTime;
+        System.out.println(result);
+        return new AsyncResult<>(result);
     }
 
     @Override
