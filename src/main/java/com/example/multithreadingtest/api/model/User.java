@@ -1,13 +1,14 @@
-package com.example.multithreadingtest.model;
+package com.example.multithreadingtest.api.model;
 
-import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * user.
@@ -24,12 +25,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "user_tb")
 public class User implements Serializable {
 
-  private static final long serialVersionUID = -2582224494389745630L;
+    private static final long serialVersionUID = -2582224494389745630L;
 
-  @Id
-  private long id;
+    @Id
+    private long id;
 
-  private String name;
+    private String name;
 
-  private String email;
+    private String email;
 }
