@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 public class NativeUserService implements UserService {
@@ -15,7 +14,7 @@ public class NativeUserService implements UserService {
     private NativeUserRepository userRepository;
 
     @Override
-    public CompletableFuture<List<User>> getUserByEmail(String email) {
+    public List<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 }

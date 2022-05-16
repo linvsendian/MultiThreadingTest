@@ -18,7 +18,7 @@ class ApplicationTests {
     @Async
     public CompletableFuture<String> asyncProcess(int index) {
         return CompletableFuture.supplyAsync(() -> {
-            long startTime = System.nanoTime();
+            long startTime = System.currentTimeMillis();
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
@@ -27,14 +27,14 @@ class ApplicationTests {
             String stringToPrint = "process-" + index;
             System.out.println(
                     "Thread execution - " + Thread.currentThread().getName() + " spend time: " + (
-                            System.nanoTime() - startTime) + " nanoseconds");
+                            System.currentTimeMillis() - startTime) + " milliseconds");
             return stringToPrint;
         });
     }
 
     @Test
     void asyncTestSample() throws ExecutionException, InterruptedException {
-        long nanoTime = System.nanoTime();
+        long milliTime = System.currentTimeMillis();
         int parallelism = 7;
 
         //set futureList
@@ -53,7 +53,7 @@ class ApplicationTests {
 
         System.out.println("Result - " + allFutureResults.get());
         System.out.println(
-                "total spend time: " + (System.nanoTime() - nanoTime) + " nanoseconds");
+                "total spend time: " + (System.currentTimeMillis() - milliTime) + " milliseconds");
     }
 
 
