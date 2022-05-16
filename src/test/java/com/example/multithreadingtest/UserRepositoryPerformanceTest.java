@@ -49,8 +49,7 @@ class UserRepositoryPerformanceTest {
         List<Thread> threadList = new ArrayList<>();
         IntStream.rangeClosed(1, total).forEach(
                 x -> {
-                    UserServicePerformance jpaUserServicePerformance = new UserServicePerformance(jpaUserService);
-                    threadList.add(new Thread(jpaUserServicePerformance));
+                    threadList.add(new Thread(new UserServicePerformance(jpaUserService)));
                 }
         );
         threadList.forEach(Thread::start);
@@ -65,8 +64,7 @@ class UserRepositoryPerformanceTest {
         List<Thread> threadList2 = new ArrayList<>();
         IntStream.rangeClosed(1, total).forEach(
                 x -> {
-                    UserServicePerformance nativeUserServicePerformance = new UserServicePerformance(nativeUserService);
-                    threadList2.add(new Thread(nativeUserServicePerformance));
+                    threadList2.add(new Thread(new UserServicePerformance(nativeUserService)));
                 }
         );
         threadList2.forEach(Thread::start);

@@ -26,8 +26,7 @@ class UserServiceTest {
         List<Thread> threadList = new ArrayList<>();
         long startTime = System.currentTimeMillis();
         for (int x = 1; x <= 1; x++) {
-            UserServicePerformance jpaUserServicePerformance = new UserServicePerformance(jpaUserService);
-            threadList.add(new Thread(jpaUserServicePerformance));
+            threadList.add(new Thread(new UserServicePerformance(jpaUserService)));
         }
         threadList.forEach(Thread::start);
         threadList.forEach(x -> {
@@ -43,8 +42,7 @@ class UserServiceTest {
         threadList = new ArrayList<>();
         startTime = System.currentTimeMillis();
         for (int x = 1; x <= 7; x++) {
-            UserServicePerformance jpaUserServicePerformance = new UserServicePerformance(jpaUserService);
-            threadList.add(new Thread(jpaUserServicePerformance));
+            threadList.add(new Thread(new UserServicePerformance(jpaUserService)));
         }
         threadList.forEach(Thread::start);
         threadList.forEach(x -> {
@@ -60,8 +58,7 @@ class UserServiceTest {
         threadList = new ArrayList<>();
         startTime = System.currentTimeMillis();
         for (int x = 1; x <= 1; x++) {
-            UserServicePerformance nativeUserServicePerformance = new UserServicePerformance(nativeUserService);
-            threadList.add(new Thread(nativeUserServicePerformance));
+            threadList.add(new Thread(new UserServicePerformance(nativeUserService)));
         }
         threadList.forEach(Thread::start);
         threadList.forEach(x -> {
@@ -77,8 +74,7 @@ class UserServiceTest {
         threadList = new ArrayList<>();
         startTime = System.currentTimeMillis();
         for (int x = 1; x <= 7; x++) {
-            UserServicePerformance jpaUserServicePerformance = new UserServicePerformance(nativeUserService);
-            threadList.add(new Thread(jpaUserServicePerformance));
+            threadList.add(new Thread(new UserServicePerformance(nativeUserService)));
         }
         threadList.forEach(Thread::start);
         threadList.forEach(x -> {
