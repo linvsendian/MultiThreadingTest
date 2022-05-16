@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
-import java.util.concurrent.Future;
-
 @SpringBootTest
 class UserServiceTest {
     @Autowired
@@ -26,7 +23,7 @@ class UserServiceTest {
         long startTime = System.nanoTime();
         UserServicePerformance jpaUserServicePerformance = new UserServicePerformance(jpaUserService);
         for (int x = 1; x <= 7; x++) {
-            Future<String> temp = jpaUserServicePerformance.showPerformance("" + 1);
+            jpaUserServicePerformance.showPerformance("" + 1);
         }
 
         System.out.println("JPA total time spent: " + (System.nanoTime() - startTime) + " ms");
