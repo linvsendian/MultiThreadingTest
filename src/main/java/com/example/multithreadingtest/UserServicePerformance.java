@@ -13,13 +13,19 @@ public class UserServicePerformance {
     }
 
 
-    public void showPerformance(int size) throws InterruptedException {
+    public void showPerformance(int size) {
         List<Thread> threadList = new ArrayList<>();
         for (int x = 0; x < size; x++) {
             Thread t = new Thread(() -> userService.getUserByEmail("email"));
             threadList.add(t);
         }
         threadList.forEach(Thread::start);
-        Thread.sleep(4000);
+        threadList.forEach(x -> {
+            try {
+                x.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
